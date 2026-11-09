@@ -30,15 +30,27 @@
       </a>
 
 
-      <button
-        id="themeToggle"
-        class="btn btn-outline-secondary d-flex align-items-center"
-        type="button"
-        aria-label="Cambiar tema"
-        title="Cambiar tema"
+      <form
+        action="/26-ACN2BV-veraBenitez-sebastian-parcial2/acciones/cambiar-tema.php"
+        method="POST"
+        class="m-0"
       >
-        <span class="material-symbols-outlined">routine</span>
-      </button>
+        <input
+          type="hidden"
+          name="volver"
+          value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>"
+        >
+        <button
+          type="submit"
+          class="btn btn-outline-secondary d-flex align-items-center"
+          aria-label="Cambiar tema"
+          title="Cambiar tema"
+        >
+          <span class="material-symbols-outlined">
+            <?= $tema === 'dark' ? 'light_mode' : 'dark_mode' ?>
+          </span>
+        </button>
+      </form>
 
     </div>
 
@@ -80,8 +92,8 @@
       <form
         class="d-flex flex-grow-1 my-2 my-lg-0 me-lg-3"
         role="search"
-        //action="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/productos"
-        //method="GET"
+        action="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/productos/productos.php"
+        method="GET"
       >
         <div class="input-group">
           <input
@@ -94,7 +106,7 @@
 
           <button
             class="btn btn-outline-secondary d-flex align-items-center"
-            //type="submit"
+            type="submit"
             aria-label="Buscar"
           >
             <span class="material-symbols-outlined">search</span>

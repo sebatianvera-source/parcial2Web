@@ -1,5 +1,9 @@
+<?php
+    include_once './componentes/tema.php';
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="<?= $tema ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +31,23 @@
 </head>
 <body>
     <?php
-        include_once './componentes/nav.php'
+        include_once './componentes/nav.php';
+        require_once './acciones/conexion.php';
+        
+        $sql = "SELECT * FROM `productos`";
+        $resultado = mysqli_query($conexion, $sql);
+
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            ?>
+                <p>
+                <?php
+                    echo "id: " . $fila['id_producto'] . ", nombre: " . $fila['nombre'];
+                ?> </p>
+            <?php
+        }
+
+        mysqli_free_result($resultado);
+        mysqli_close($conexion);
     ?>
     <main>
         <img src="./recursos/Vera_Benitez_Sebastian_ACN1BV_TP1.jpg" alt="Banner Bullpader" class="w-100 d-none d-md-block">
