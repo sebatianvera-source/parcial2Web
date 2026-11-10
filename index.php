@@ -1,28 +1,14 @@
 <?php
     include_once './componentes/tema.php';
-
-    $base = '/26-ACN2BV-veraBenitez-sebastian-parcial2/';
+    
     require_once './acciones/conexion.php';
+    require_once './acciones/consultas.php';
 
-    $sql = "SELECT
-                `p`.`id_producto`,
-                `p`.`nombre`,
-                `p`.`precio`,
-                `i`.`ruta` AS `imagen`,
-                `i`.`alt` AS `imagen_alt`
-            FROM `productos` `p`
-            LEFT JOIN imagenes_producto i
-                ON `i`.`id_producto` = `p`.`id_producto`
-                AND `i`.`orden` = 1
-            WHERE `p`.`destacado` = 1
-                AND `p`.`activo` = 1
-                LIMIT 12
-            ";
-    $resultado = mysqli_query($conexion, $sql);
+    $productosDestacados = obtenerProductosDestacados($conexion);
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="<?= $tema ?>">
+<html lang="es" data-bs-theme="<?= $tema ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,11 +37,11 @@
 
     <title>Bullpadel Argentina</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php
         include_once './componentes/nav.php';
     ?>
-    <main>
+    <main class="flex-grow-1">
         <div>
             <div>
                 <img src="./recursos/Vera_Benitez_Sebastian_ACN1BV_TP1.jpg" alt="Banner Bullpader" class="w-100 d-none d-md-block">
@@ -64,29 +50,27 @@
             <section class="mx-4 my-5">
                 <h2 class="my-5">Recomendaciones</h2>
 
-                <div>
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
-                        <?php
-                            while ($producto = mysqli_fetch_assoc($resultado)) {
-                                ?>
-                                <div class="producto-card">
-                                    <a
-                                        href="<?= $base ?>paginas/productos/producto.php?id=<?= (int) $producto['id_producto'] ?>"
-                                    >
-                                        <div class="producto-card-media">
-                                            <img
-                                                src="<?= htmlspecialchars($base . $producto['imagen']) ?>"
-                                                alt="<?= htmlspecialchars($producto['imagen_alt']) ?>"
-                                            >
-                                        </div>
-                                        <h3 class="producto-card-nombre"><?= htmlspecialchars($producto['nombre']) ?></h3>
-                                        <p class="producto-card-precio">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
-                                    </a>
-                                </div>
-                                <?php
-                            }
-                        ?>
-                    </div>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                    <?php
+                        while ($producto = mysqli_fetch_assoc($productosDestacados)) {
+                            ?>
+                            <div class="producto-card">
+                                <a
+                                    href="<?= $base ?>paginas/productos/producto.php?id=<?= (int) $producto['id_producto'] ?>"
+                                >
+                                    <div class="producto-card-media">
+                                        <img
+                                            src="<?= htmlspecialchars($base . $producto['imagen']) ?>"
+                                            alt="<?= htmlspecialchars($producto['imagen_alt']) ?>"
+                                        >
+                                    </div>
+                                    <h3 class="producto-card-nombre"><?= htmlspecialchars($producto['nombre']) ?></h3>
+                                    <p class="producto-card-precio">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
+                                </a>
+                            </div>
+                            <?php
+                        }
+                    ?>
                 </div>
             </section>
             <div>
@@ -103,7 +87,7 @@
                         <div class="col-12 col-md-3 col-lg-2 text-center text-md-start">
                             <h3>Fede Chingotto</h3>
                             <p>Fede Chingotto es uno de los referentes más destacados del pádel mundial y un orgullo para Argentina. Reconocido por su inteligencia táctica, velocidad y capacidad defensiva, se ha consolidado entre los mejores jugadores del circuito profesional gracias a su esfuerzo, disciplina y pasión por el deporte.
-Como integrante del Team Bullpadel, Fede confía en la innovación y la calidad de los productos de la marca para competir al más alto nivel. Su estilo de juego, basado en la precisión y el control, representa los valores que impulsan a Bullpadel a desarrollar equipamiento de excelencia para jugadores de todas las categorías.</p>
+                                Como integrante del Team Bullpadel, Fede confía en la innovación y la calidad de los productos de la marca para competir al más alto nivel. Su estilo de juego, basado en la precisión y el control, representa los valores que impulsan a Bullpadel a desarrollar equipamiento de excelencia para jugadores de todas las categorías.</p>
                         </div>
                     </div>
                 </article>
@@ -120,6 +104,6 @@ Como integrante del Team Bullpadel, Fede confía en la innovación y la calidad 
 </html>
 
 <?php
-    mysqli_free_result($resultado);
+    mysqli_free_result($productosDestacados);
     mysqli_close($conexion);
 ?>

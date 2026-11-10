@@ -24,7 +24,7 @@
     
     
           <a
-            href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/login.php"
+            href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/inicio-sesion/inicio-sesion.php"
             class="nav-link d-flex align-items-center"
             aria-label="Ingresar"
             title="Ingresar"
