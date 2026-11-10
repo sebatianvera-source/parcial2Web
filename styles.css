@@ -1,0 +1,119 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h2 {
+    font-family: 'Barlow Condensed', serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.producto-card {
+    display: block;
+    text-align: center;
+}
+
+
+.producto-card-media {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 2rem;
+    overflow: hidden;
+    background-color: #e8e8e8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+.producto-card-media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #ea5a32 0%, #b8321a 45%, #8f1f0c 70%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+/* Óvalo gris que tapa la parte de arriba y deja ver el rojo abajo */
+.producto-card-media::after {
+    content: "";
+    position: absolute;
+    top: -15%;
+    left: -15%;
+    width: 130%;
+    height: 95%;
+    background-color: #ececec;
+    border-radius: 50%;
+}
+
+.producto-card-media img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8% 12% 18%;
+    filter: drop-shadow(0 18px 12px rgba(0, 0, 0, 0.25));
+    transition: transform 0.35s ease;
+}
+
+/* Hover y foco con teclado */
+.producto-card:hover .producto-card-media::before,
+.producto-card:focus-visible .producto-card-media::before {
+    opacity: 1;
+}
+
+.producto-card:hover .producto-card-media img,
+.producto-card:focus-visible .producto-card-media img {
+    transform: translateY(-8px);
+}
+
+/* En pantallas táctiles el rojo se ve siempre */
+@media (hover: none) {
+    .producto-card-media::before {
+        opacity: 1;
+    }
+}
+
+.producto-card-nombre {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    margin: 1rem 0 0.25rem;
+}
+
+.producto-card-precio {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* .carrusel-contenedor {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.carrusel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carrusel-item {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+} */
