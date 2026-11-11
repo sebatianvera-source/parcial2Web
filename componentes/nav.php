@@ -102,9 +102,11 @@
               <input
                 class="form-control"
                 type="search"
+                id="buscar"
                 name="buscar"
                 placeholder="Buscar productos..."
                 aria-label="Buscar productos"
+                value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>"
               >
     
               <button
