@@ -50,13 +50,15 @@
 
         <div class="d-flex justify-content-between my-5 mx-3">
             <h2>Panel de Administrador</h2>
-
-            <button type="button" class="btn btn-success">
-                <div class="d-flex">
+            <a
+                href="../crear-producto/crear-producto.php"
+                type="button" class="btn btn-success"
+            >
+                <div class="d-flex align-items-center h-100">
                     <span class="material-symbols-outlined me-2">add</span>
                     <span>Agregar Nuevo</span>
                 </div>
-            </button>
+            </a>
         </div>
 
 
@@ -92,16 +94,17 @@
                             <td><?= htmlspecialchars($producto['descripcion'] ?? '--') ?></td>
                             <td>
                                 <div class="d-flex gap-3">
-                                    <a href="../editar-producto/editar-producto.php">
-                                        <button type="button" class="btn btn-primary">
-                                            <div class="d-flex">
-                                                <span class="material-symbols-outlined me-2">edit</span>
-                                                <span>Editar</span>
-                                            </div>                                            
-                                        </button>
+                                    <a
+                                        href="../editar-producto/editar-producto.php?id=<?= $producto['id_producto'] ?>"
+                                        type="button" class="btn btn-primary"
+                                    >
+                                        <div class="d-flex align-items-center h-100">
+                                            <span class="material-symbols-outlined me-2">edit</span>
+                                            <span>Editar</span>
+                                        </div>
                                     </a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<?= $producto['id_producto'] ?>">
-                                        <div class="d-flex">
+                                        <div class="d-flex align-items-center h-100">
                                             <span class="material-symbols-outlined me-2">delete</span>
                                             <span>Eliminar</span>
                                         </div>
@@ -145,3 +148,8 @@
     </script>
 </body>
 </html>
+
+<?php
+    mysqli_free_result($productos);
+    mysqli_close($conexion);
+?>

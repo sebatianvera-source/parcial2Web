@@ -37,7 +37,7 @@
     ?>
     <main class="d-flex flex-grow-1 justify-content-center align-items-center">
         <div class="d-flex flex-column justify-content-center w-75 p-3 containerForm">
-            <h2 class="text-center">Registrarse</h2>
+            <h2 class="text-center mb-5">Registrarse</h2>
             <form action="">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>

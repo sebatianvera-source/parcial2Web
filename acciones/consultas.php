@@ -58,7 +58,7 @@
     }
 
     function obtenerProductos($conexion) {
-        $sql = "SELECT p.*, i.*, c.nombre AS categoria
+        $sql = "SELECT p.*, i.ruta AS ruta, i.alt AS alt, c.nombre AS categoria
             FROM productos p
             LEFT JOIN imagenes_producto i
                 ON i.id_producto = p.id_producto
@@ -68,6 +68,26 @@
             
         $resultado = mysqli_query($conexion, $sql);
         return $resultado;
+    }
+
+    function obtenerProductoPorId($conexion, $id) {
+        $sql = "SELECT p.*, i.ruta AS ruta, i.alt AS alt
+            FROM productos p
+            LEFT JOIN imagenes_producto i
+                ON i.id_producto = p.id_producto
+                AND i.orden = 1
+            WHERE p.id_producto = ?";
+        
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+
+        mysqli_stmt_execute($stmt);
+        $resultado = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
+
+        return $resultado;
+
     }
 
     function obtenerCategorias($conexion) {

@@ -3,6 +3,41 @@
 
     require_once '../../acciones/conexion.php';
     require_once '../../acciones/consultas.php';
+
+    $productoResult = obtenerProductoPorId($conexion, (int) $_GET['id']);
+
+    $producto = mysqli_fetch_assoc($productoResult);
+    
+    $nombre = htmlspecialchars(trim($producto['nombre'] ?? ''));
+
+    $precioGet = trim($producto['precio'] ?? '');
+    if (!empty($precioGet)) {
+        if (is_numeric($precioGet) && $precioGet >= 0) {
+            $precio = $precioGet;
+        }
+    }
+
+    $descripcion = htmlspecialchars(trim($producto['descripcion'] ?? ''));
+    
+    $rutaImg = htmlspecialchars(trim($producto['ruta'] ?? ''));
+    
+    $altImg = htmlspecialchars(trim($producto['alt'] ?? ''));
+
+    $categoriaGet = trim($producto['id_categoria'] ?? '');
+    if (!empty($categoriaGet)) {
+        if (ctype_digit($categoriaGet)) {
+            $idCategoria = (int) $categoriaGet;
+        }
+    }
+
+    $destacadoGet = trim($producto['destacado'] ?? '');
+    if (!empty($destacadoGet)) {
+        if (ctype_digit($destacadoGet)) {
+            $destacado = (int) $destacadoGet;
+        }
+    }
+
+    $categorias = obtenerCategorias($conexion);
 ?>
 
 <!DOCTYPE html>
@@ -39,13 +74,106 @@
         include_once '../../componentes/nav.php'
     ?>
     <main class="flex-grow-1">
-        <h2 class="my-5">Editar Producto</h2>
-
-        <section>
+        <div class="d-flex flex-column justify-content-center containerForm p-3 mx-3 mt-5">
+            <h2 class="text-center mb-5">Editar Producto</h2>
+    
             <form action="">
-                
+                <div class="d-flex gap-3">
+                    <div class="mb-3 w-100">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nombre"
+                            placeholder="Nombre"
+                            value="<?= $nombre ?>"
+                        >
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="precio"
+                            placeholder="Precio"
+                            value="<?= $precio ?>"
+                        >
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <textarea
+                        type="text"
+                        class="form-control"
+                        id="descripcion"
+                        placeholder="Descripcion"
+                    ><?= $descripcion ?></textarea>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="mb-3 w-100">
+                        <label for="ruta" class="form-label">Ruta Imagen</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="ruta"
+                            placeholder="Ruta Imagen"
+                            value="<?= $rutaImg ?>"
+                        >
+                    </div>
+                    <div class="mb-3 w-100">
+                        <label for="altImg" class="form-label">Alt Imagen</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="altImg"
+                            placeholder="Alt Imagen"
+                            value="<?= $altImg ?>"
+                        >
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mb-5">
+                    <div class="w-100">
+                        <label for="nombre" class="form-label">Categoría</label>
+    
+                        <select class="form-select" aria-label="categorias" id="categorias" name="categorias">
+                            <option selected disabled hidden>Seleccionar</option>
+                            <?php
+                                while ($categoria = mysqli_fetch_assoc($categorias)) {
+                            ?>
+                                    <option
+                                        value="<?= $categoria['id_categoria'] ?>"
+                                        <?= (int) $categoria['id_categoria'] === $idCategoria ? 'selected' : '' ?>
+                                    >
+                                        <?= htmlspecialchars($categoria['nombre']) ?>
+                                    </option>
+                            <?php
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="w-100">
+                        <p class="form-label">Destacado</p>
+                        <div>
+                            <select class="form-select" aria-label="ordenamiento" id="ordenar" name="ordenar">
+                                <option selected disabled hidden>Seleccionar</option>
+                                <option value="1" <?= $destacado === 1 ? 'selected' : '' ?> >Si</option>
+                                <option value="0" <?= $destacado === 0 ? 'selected' : '' ?> >No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-3">
+                    <div class="w-25">
+                        <a href="../panel-de-administrador/panel-de-administrador.php" class="btn btnNaranja btn-lg w-100">
+                            Cancelar
+                        </a>
+                    </div>
+                    <div class="w-25">
+                        <button type="submit" class="btn btnNaranja btn-lg w-100">Editar</button>
+                    </div>
+                </div>
             </form>
-        </section>
+        </div>
     </main>
     <?php
         include_once '../../componentes/footer.php'
@@ -55,3 +183,9 @@
     </script>
 </body>
 </html>
+
+<?php
+    mysqli_free_result($productoResult);
+    mysqli_free_result($categorias);
+    mysqli_close($conexion);
+?>
