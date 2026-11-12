@@ -13,7 +13,6 @@
                 ON i.id_producto = p.id_producto
                 AND i.orden = 1
             WHERE p.destacado = 1
-                AND p.activo = 1
                 LIMIT 4
             ";
         $resultado = mysqli_query($conexion, $sql);
@@ -31,8 +30,7 @@
                 LEFT JOIN imagenes_producto i
                     ON i.id_producto = p.id_producto
                 AND i.orden = 1
-                WHERE p.activo = 1
-                AND (? = 0 OR p.id_categoria = ?)
+                WHERE (? = 0 OR p.id_categoria = ?)
                 AND (? = 0 OR p.precio >= ?)
                 AND (? = 0 OR p.precio <= ?)
                 AND (? = '' OR p.nombre LIKE ?)
@@ -59,9 +57,32 @@
         return $resultado;
     }
 
+    function obtenerProductos($conexion) {
+        $sql = "SELECT p.*, i.*, c.nombre AS categoria
+            FROM productos p
+            LEFT JOIN imagenes_producto i
+                ON i.id_producto = p.id_producto
+                AND i.orden = 1
+            LEFT JOIN categorias c
+                ON c.id_categoria = p.id_categoria";
+            
+        $resultado = mysqli_query($conexion, $sql);
+        return $resultado;
+    }
+
     function obtenerCategorias($conexion) {
         $sql = "SELECT * FROM categorias";
         $resultado = mysqli_query($conexion, $sql);
         return $resultado;
+    }
+
+    function deleteProductos($conexion, $id) {
+        $sql = "DELETE FROM productos WHERE p.id_productos = ?";
+
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+
+        return mysqli_stmt_execute($stmt);
     }
 ?>

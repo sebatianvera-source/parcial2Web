@@ -81,9 +81,9 @@
 
                 <article>
                     <div class="row g-4 align-items-start">
-                        <div class="col-12 col-md-3 col-lg-2 text-center text-md-start">
+                        <!-- <div class="col-12 col-md-3 col-lg-2 text-center text-md-start">
                             <img src="./recursos/chingotto.jpg" alt="Jugador Federico Chingotto">
-                        </div>
+                        </div> -->
                         <div class="col-12 col-md-3 col-lg-2 text-center text-md-start">
                             <h3>Fede Chingotto</h3>
                             <p>Fede Chingotto es uno de los referentes más destacados del pádel mundial y un orgullo para Argentina. Reconocido por su inteligencia táctica, velocidad y capacidad defensiva, se ha consolidado entre los mejores jugadores del circuito profesional gracias a su esfuerzo, disciplina y pasión por el deporte.

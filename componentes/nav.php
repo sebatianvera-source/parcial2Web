@@ -11,6 +11,25 @@
     
     
         <div class="d-flex align-items-center gap-3 ms-auto order-lg-3">
+
+          <div class="dropdown">
+            <button
+              class="btn btn-link nav-link d-flex align-items-center dropdown-toggle p-0"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Cuenta"
+              title="Cuenta"
+            >
+              <span class="material-symbols-outlined">account_circle</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/panel-de-administrador/panel-de-administrador.php">Panel de Administrador</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/inicio-sesion/inicio-sesion.php">Iniciar Sesión</a></li>
+              <li><a class="dropdown-item" href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/registrarse/registrarse.php">Registrarse</a></li>
+            </ul>
+          </div>
     
     
           <a
@@ -21,17 +40,6 @@
           >
             <span class="material-symbols-outlined">shopping_cart</span>
           </a>
-    
-    
-          <a
-            href="/26-ACN2BV-veraBenitez-sebastian-parcial2/paginas/inicio-sesion/inicio-sesion.php"
-            class="nav-link d-flex align-items-center"
-            aria-label="Ingresar"
-            title="Ingresar"
-          >
-            <span class="material-symbols-outlined">account_circle</span>
-          </a>
-    
     
           <form
             action="/26-ACN2BV-veraBenitez-sebastian-parcial2/acciones/cambiar-tema.php"
