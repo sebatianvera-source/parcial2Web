@@ -4,6 +4,49 @@
     require_once '../../acciones/conexion.php';
     require_once '../../acciones/consultas.php';
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nombre = trim($_POST['nombre'] ?? '');
+    
+        $precioPost = trim($_POST['precio'] ?? '');
+        if (!empty($precioPost)) {
+            if (is_numeric($precioPost) && $precioPost >= 0) {
+                $precio = (float) $precioPost;
+            }
+        }
+    
+        $descripcion = trim($_POST['descripcion'] ?? '');
+        
+        $rutaImg = trim($_POST['ruta'] ?? '');
+        
+        $altImg = trim($_POST['altImg'] ?? '');
+    
+        $categoriaPost = trim($_POST['categoria'] ?? '');
+        if (!empty($categoriaPost)) {
+            if (ctype_digit($categoriaPost)) {
+                $idCategoria = (int) $categoriaPost;
+            }
+        }
+    
+        $destacadoPost = trim($_POST['destacado'] ?? '');
+        if ($destacadoPost === '0' || $destacadoPost === '1') {
+            $destacado = (int) $destacadoPost;
+        }
+    
+        ingresarProductos(
+            $conexion,
+            $nombre,
+            $precio,
+            $descripcion === '' ? null : $descripcion,
+            $idCategoria,
+            $destacado,
+            $rutaImg,
+            $altImg
+        );
+
+        header('Location: ../panel-de-administrador/panel-de-administrador.php');
+        exit;
+    }
+
     $categorias = obtenerCategorias($conexion);
 ?>
 
@@ -44,41 +87,77 @@
         <div class="d-flex flex-column justify-content-center containerForm p-3 mx-3 mt-5">
             <h2 class="text-center mb-5">Crear Producto</h2>
     
-            <form action="">
+            <form method="POST">
                 <div class="d-flex gap-3">
                     <div class="mb-3 w-100">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nombre"
+                            name="nombre"
+                            required
+                            placeholder="Nombre"
+                        >
                     </div>
                     <div class="mb-3 w-100">
                         <label for="precio" class="form-label">Precio</label>
-                        <input type="number" class="form-control" id="precio" placeholder="Precio">
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="precio"
+                            name="precio"
+                            required
+                            placeholder="Precio"
+                            step="0.01"
+                        >
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripcion</label>
-                    <textarea type="text" class="form-control" id="descripcion" placeholder="Descripcion"></textarea>
+                    <textarea
+                        class="form-control"
+                        id="descripcion"
+                        name="descripcion"
+                        placeholder="Descripcion"
+                    ></textarea>
                 </div>
                 <div class="d-flex gap-3">
                     <div class="mb-3 w-100">
                         <label for="ruta" class="form-label">Ruta Imagen</label>
-                        <input type="text" class="form-control" id="ruta" placeholder="Ruta Imagen">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="ruta"
+                            name="ruta"
+                            required
+                            placeholder="Ruta Imagen"
+                        >
                     </div>
                     <div class="mb-3 w-100">
                         <label for="altImg" class="form-label">Alt Imagen</label>
-                        <input type="text" class="form-control" id="altImg" placeholder="Alt Imagen">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="altImg"
+                            name="altImg"
+                            required
+                            placeholder="Alt Imagen"
+                        >
                     </div>
                 </div>
                 <div class="d-flex gap-3 mb-5">
                     <div class="w-100">
-                        <label for="nombre" class="form-label">Categoría</label>
+                        <label for="categoria" class="form-label">Categoría</label>
     
-                        <select class="form-select" aria-label="categorias" id="categorias" name="categorias">
+                        <select class="form-select" aria-label="categoria" id="categoria" name="categoria">
                             <option selected disabled hidden>Seleccionar</option>
                             <?php
                                 while ($categoria = mysqli_fetch_assoc($categorias)) {
                             ?>
-                                    <option value="<?= $categoria['id_categoria'] ?>" >
+                                    <option
+                                        value="<?= htmlspecialchars($categoria['id_categoria']) ?>"
+                                    >
                                         <?= htmlspecialchars($categoria['nombre']) ?>
                                     </option>
                             <?php
@@ -87,9 +166,9 @@
                         </select>
                     </div>
                     <div class="w-100">
-                        <p class="form-label">Destacado</p>
+                        <label for="destacado" class="form-label">Destacado</label>
                         <div>
-                            <select class="form-select" aria-label="ordenamiento" id="ordenar" name="ordenar">
+                            <select class="form-select" aria-label="destacado" id="destacado" name="destacado">
                                 <option selected disabled hidden>Seleccionar</option>
                                 <option value="1">Si</option>
                                 <option value="0">No</option>

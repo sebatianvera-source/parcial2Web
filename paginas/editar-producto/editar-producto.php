@@ -4,36 +4,90 @@
     require_once '../../acciones/conexion.php';
     require_once '../../acciones/consultas.php';
 
-    $productoResult = obtenerProductoPorId($conexion, (int) $_GET['id']);
+    $id = trim($_GET['id'] ?? '');
 
-    $producto = mysqli_fetch_assoc($productoResult);
-    
-    $nombre = htmlspecialchars(trim($producto['nombre'] ?? ''));
-
-    $precioGet = trim($producto['precio'] ?? '');
-    if (!empty($precioGet)) {
-        if (is_numeric($precioGet) && $precioGet >= 0) {
-            $precio = $precioGet;
-        }
+    if (empty($id) || !ctype_digit($id)) {
+        header('Location: ../panel-de-administrador/panel-de-administrador.php');
+        exit;
     }
 
-    $descripcion = htmlspecialchars(trim($producto['descripcion'] ?? ''));
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nombre = trim($_POST['nombre'] ?? '');
     
-    $rutaImg = htmlspecialchars(trim($producto['ruta'] ?? ''));
-    
-    $altImg = htmlspecialchars(trim($producto['alt'] ?? ''));
-
-    $categoriaGet = trim($producto['id_categoria'] ?? '');
-    if (!empty($categoriaGet)) {
-        if (ctype_digit($categoriaGet)) {
-            $idCategoria = (int) $categoriaGet;
+        $precioPost = trim($_POST['precio'] ?? '');
+        if (!empty($precioPost)) {
+            if (is_numeric($precioPost) && $precioPost >= 0) {
+                $precio = (float) $precioPost;
+            }
         }
-    }
+    
+        $descripcion = trim($_POST['descripcion'] ?? '');
+        
+        $rutaImg = trim($_POST['ruta'] ?? '');
+        
+        $altImg = trim($_POST['alt'] ?? '');
+    
+        $categoriaPost = trim($_POST['categoria'] ?? '');
+        if (!empty($categoriaPost)) {
+            if (ctype_digit($categoriaPost)) {
+                $idCategoria = (int) $categoriaPost;
+            }
+        }
+    
+        $destacadoPost = trim($_POST['destacado'] ?? '');
+        if ($destacadoPost === '0' || $destacadoPost === '1') {
+            $destacado = (int) $destacadoPost;
+        }
+    
+        actualizarProducto(
+            $conexion,
+            $id,
+            $nombre,
+            $precio,
+            $descripcion === '' ? null : $descripcion,
+            $idCategoria,
+            $destacado,
+            $rutaImg,
+            $altImg
+        );
 
-    $destacadoGet = trim($producto['destacado'] ?? '');
-    if (!empty($destacadoGet)) {
-        if (ctype_digit($destacadoGet)) {
-            $destacado = (int) $destacadoGet;
+        header('Location: ../panel-de-administrador/panel-de-administrador.php');
+        exit;
+    } else {
+        $productoResult = obtenerProductoPorId($conexion, (int) $id);
+        $producto = mysqli_fetch_assoc($productoResult);
+        mysqli_free_result($productoResult);
+
+        if (!$producto) {
+            header('Location: ../panel-de-administrador/panel-de-administrador.php');
+            exit;
+        }
+        
+        $nombre = trim($producto['nombre'] ?? '');
+
+        $precioGet = trim($producto['precio'] ?? '');
+        if (!empty($precioGet)) {
+            if (is_numeric($precioGet) && $precioGet >= 0) {
+                $precio = $precioGet;
+            }
+        }
+
+        $descripcion = trim($producto['descripcion'] ?? '');
+        
+        $rutaImg = trim($producto['ruta'] ?? '');
+        
+        $altImg = trim($producto['altImg'] ?? '');
+
+        $categoriaGet = trim($producto['id_categoria'] ?? '');
+        if (!empty($categoriaGet)) {
+            if (ctype_digit($categoriaGet)) {
+                $idCategoria = (int) $categoriaGet;
+            }
+        }
+
+        $destacadoPost = trim($producto['destacado'] ?? '');
+        if ($destacadoPost === '0' || $destacadoPost === '1') {
+            $destacado = (int) $destacadoPost;
         }
     }
 
@@ -77,7 +131,7 @@
         <div class="d-flex flex-column justify-content-center containerForm p-3 mx-3 mt-5">
             <h2 class="text-center mb-5">Editar Producto</h2>
     
-            <form action="">
+            <form method="POST">
                 <div class="d-flex gap-3">
                     <div class="mb-3 w-100">
                         <label for="nombre" class="form-label">Nombre</label>
@@ -85,8 +139,10 @@
                             type="text"
                             class="form-control"
                             id="nombre"
+                            name="nombre"
+                            required
                             placeholder="Nombre"
-                            value="<?= $nombre ?>"
+                            value="<?= htmlspecialchars($nombre) ?>"
                         >
                     </div>
                     <div class="mb-3 w-100">
@@ -95,19 +151,22 @@
                             type="number"
                             class="form-control"
                             id="precio"
+                            name="precio"
+                            required
                             placeholder="Precio"
-                            value="<?= $precio ?>"
+                            step="0.01"
+                            value="<?= htmlspecialchars($precio) ?>"
                         >
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripcion</label>
                     <textarea
-                        type="text"
                         class="form-control"
                         id="descripcion"
+                        name="descripcion"
                         placeholder="Descripcion"
-                    ><?= $descripcion ?></textarea>
+                    ><?= htmlspecialchars($descripcion) ?></textarea>
                 </div>
                 <div class="d-flex gap-3">
                     <div class="mb-3 w-100">
@@ -116,8 +175,10 @@
                             type="text"
                             class="form-control"
                             id="ruta"
+                            name="ruta"
+                            required
                             placeholder="Ruta Imagen"
-                            value="<?= $rutaImg ?>"
+                            value="<?= htmlspecialchars($rutaImg) ?>"
                         >
                     </div>
                     <div class="mb-3 w-100">
@@ -126,22 +187,24 @@
                             type="text"
                             class="form-control"
                             id="altImg"
+                            name="altImg"
+                            required
                             placeholder="Alt Imagen"
-                            value="<?= $altImg ?>"
+                            value="<?= htmlspecialchars($altImg) ?>"
                         >
                     </div>
                 </div>
                 <div class="d-flex gap-3 mb-5">
                     <div class="w-100">
-                        <label for="nombre" class="form-label">Categoría</label>
+                        <label for="categoria" class="form-label">Categoría</label>
     
-                        <select class="form-select" aria-label="categorias" id="categorias" name="categorias">
+                        <select class="form-select" aria-label="categoria" id="categoria" name="categoria">
                             <option selected disabled hidden>Seleccionar</option>
                             <?php
                                 while ($categoria = mysqli_fetch_assoc($categorias)) {
                             ?>
                                     <option
-                                        value="<?= $categoria['id_categoria'] ?>"
+                                        value="<?= htmlspecialchars($categoria['id_categoria']) ?>"
                                         <?= (int) $categoria['id_categoria'] === $idCategoria ? 'selected' : '' ?>
                                     >
                                         <?= htmlspecialchars($categoria['nombre']) ?>
@@ -152,9 +215,9 @@
                         </select>
                     </div>
                     <div class="w-100">
-                        <p class="form-label">Destacado</p>
+                        <label for="destacado" class="form-label">Destacado</label>
                         <div>
-                            <select class="form-select" aria-label="ordenamiento" id="ordenar" name="ordenar">
+                            <select class="form-select" aria-label="destacado" id="destacado" name="destacado">
                                 <option selected disabled hidden>Seleccionar</option>
                                 <option value="1" <?= $destacado === 1 ? 'selected' : '' ?> >Si</option>
                                 <option value="0" <?= $destacado === 0 ? 'selected' : '' ?> >No</option>
@@ -185,7 +248,6 @@
 </html>
 
 <?php
-    mysqli_free_result($productoResult);
     mysqli_free_result($categorias);
     mysqli_close($conexion);
 ?>

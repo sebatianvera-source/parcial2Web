@@ -121,7 +121,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <span>¿Desea eliminar el producto <strong><?= htmlspecialchars($producto['nombre']) ?></strong>?</span>
-                                                    <input type="hidden" name="id" value="<?= $producto['id'] ?>">
+                                                    <input type="hidden" name="id" value="<?= $producto['id_producto'] ?>">
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

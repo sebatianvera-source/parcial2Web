@@ -96,13 +96,93 @@
         return $resultado;
     }
 
-    function deleteProductos($conexion, $id) {
-        $sql = "DELETE FROM productos WHERE p.id_productos = ?";
+    function eliminarProducto($conexion, $id) {
+        $sql = "DELETE FROM productos WHERE id_producto = ?";
 
         $stmt = mysqli_prepare($conexion, $sql);
 
         mysqli_stmt_bind_param($stmt, 'i', $id);
 
         return mysqli_stmt_execute($stmt);
+    }
+
+    function actualizarProducto($conexion, $id_producto, $nombre, $precio, $descripcion, $id_categoria, $destacado, $rutaImg, $altImg) {
+        $sql = "UPDATE productos
+            SET nombre = ?, precio = ?, descripcion = ?, id_categoria = ?, destacado = ?
+            WHERE id_producto = ?";
+
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param(
+            $stmt,
+            'sdsiii', 
+            $nombre,
+            $precio,
+            $descripcion,
+            $id_categoria,
+            $destacado,
+            $id_producto
+        );
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $sql ="UPDATE imagenes_producto
+            SET ruta = ?, alt = ?
+            WHERE id_producto = ?
+            AND orden = 1";
+
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param(
+            $stmt,
+            'ssi',
+            $rutaImg,
+            $altImg,
+            $id_producto
+        );
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+
+    function ingresarProductos($conexion, $nombre, $precio, $descripcion, $id_categoria, $destacado, $ruta, $alt) {
+        $sql = "INSERT INTO productos
+            (nombre, precio, descripcion, id_categoria, destacado)
+            VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param(
+            $stmt,
+            'sdsii', 
+            $nombre,
+            $precio,
+            $descripcion,
+            $id_categoria,
+            $destacado,
+        );
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $id_producto = mysqli_insert_id($conexion);
+
+        $sql = "INSERT INTO imagenes_producto
+            (id_producto, ruta, alt, orden)
+            VALUE (?, ?, ?, 1)";
+        
+        $stmt = mysqli_prepare($conexion, $sql);
+
+        mysqli_stmt_bind_param(
+            $stmt,
+            'iss',
+            $id_producto,
+            $ruta,
+            $alt
+        );
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
     }
 ?>

@@ -1,5 +1,9 @@
+<?php
+    include_once '../../componentes/tema.php';
+?>
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="<?= $tema ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,14 +27,14 @@
         rel="stylesheet"
     >
 
-    <title>Document</title>
+    <title>Contacto</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php
         include_once '../../componentes/nav.php'
     ?>
-    <main>
-        <h1>Contacto</h1>
+    <main class="flex-grow-1">
+        <h2>Contacto</h2>
     </main>
     <?php
         include_once '../../componentes/footer.php'
